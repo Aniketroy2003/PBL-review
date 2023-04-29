@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Speech to Text Conversion</title>
+</head>
+<body>
+    <h1>Speech to Text Conversion</h1>
+    <div>
+        <textarea id="output" rows="10" cols="50" placeholder="Speak into your microphone..."></textarea>
+        <button id="start-recognition-btn">Start Recognition</button>
+    </div>
+    <script>
+        const output = document.getElementById("output");
+        const startRecognitionBtn = document.getElementById("start-recognition-btn");
+    
+        // check if SpeechRecognition API is supported
+        if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    
+            recognition.continuous = true;
+    
+            startRecognitionBtn.addEventListener("click", () => {
+                recognition.start();
+            });
+    
+            recognition.onresult = (event) => {
+                const transcript = event.results[event.results.length - 1][0].transcript;
+                output.value = transcript;
+            };
+    
+            recognition.onerror = (event) => {
+                console.error(event.error);
+            };
+        } else {
+            startRecognitionBtn.disabled = true;
+            console.error("Speech recognition not supported.");
+        }
+    </script>
+</body>
+</html>
